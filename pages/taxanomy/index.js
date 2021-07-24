@@ -11,7 +11,6 @@ import Link from "next/link";
 const getTreeItemsFromData = (treeItems) => {
   // console.log(JSON.stringify(treeItems.treeItems.children));
   // return "h";
-  console.log(treeItems);
   return treeItems.map((treeItemData) => {
     let children = undefined;
     if (treeItemData.children && treeItemData.children.length > 0) {
@@ -29,12 +28,7 @@ const getTreeItemsFromData = (treeItems) => {
       );
     } else {
       return (
-        <Link
-          href={`taxanomy/${treeItemData.name.slice(
-            treeItemData.name.lastIndexOf(`${"\\"}`) + 1,
-            treeItemData.name.length
-          )}`}
-        >
+        <Link href={`taxanomy/${treeItemData.name}`}>
           <TreeItem
             onClick={() => {}}
             key={treeItemData.id}
@@ -56,7 +50,6 @@ const DataTreeView = (treeItems) => {
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
     >
-      {console.log(treeItems)}
       {getTreeItemsFromData(treeItems.treeItems.children)}
     </TreeView>
   );
@@ -65,7 +58,6 @@ const DataTreeView = (treeItems) => {
 function taxonomy({ items }) {
   return (
     <div className={Styles.container}>
-      {console.log(items)}
       <h1 className={Styles.title}>Taxanomy</h1>
       <main className={Styles.main}>
         <DataTreeView treeItems={items} />
