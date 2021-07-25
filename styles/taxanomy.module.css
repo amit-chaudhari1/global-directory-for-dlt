@@ -9,28 +9,16 @@
 }
 
 .main {
-  max-height: fit-content;
-  margin: 0;
-  padding: 5rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
+  line-height: 1.15;
 
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+  align-items: center;
 }
 
 .title {
-  margin: 0;
-  line-height: 1.15;
+  color: #0070f3;
+  margin: 2rem;
   font-size: 4rem;
 }

@@ -1,16 +1,12 @@
 import { buildGraph } from "../../lib/resolvePaths";
-import { makeStyles } from "@material-ui/core/styles";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { TreeItem } from "@material-ui/lab";
 import Styles from "../../styles/taxanomy.module.css";
-import { Style } from "@material-ui/icons";
 import Link from "next/link";
 
 const getTreeItemsFromData = (treeItems) => {
-  // console.log(JSON.stringify(treeItems.treeItems.children));
-  // return "h";
   return treeItems.map((treeItemData) => {
     let children = undefined;
     if (treeItemData.children && treeItemData.children.length > 0) {
@@ -19,10 +15,12 @@ const getTreeItemsFromData = (treeItems) => {
         <TreeItem
           key={treeItemData.id}
           nodeId={treeItemData.id}
-          label={treeItemData.name.slice(
-            treeItemData.name.lastIndexOf(`${"\\"}`) + 1,
-            treeItemData.name.length
-          )}
+          label={treeItemData.name
+            .slice(
+              treeItemData.name.lastIndexOf(`${"\\"}`) + 1,
+              treeItemData.name.length
+            )
+            .toUpperCase()}
           children={children}
         />
       );

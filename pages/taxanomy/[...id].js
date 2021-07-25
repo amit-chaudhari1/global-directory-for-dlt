@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
+import Styles from "../../styles/markdown.module.css";
 import { useEffect, useState } from "react";
-
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ReactMarkdown from "react-markdown";
 import ReactMarkdownComponents from "../../lib/ReactMarkdownComponents";
 const Comment = () => {
@@ -11,13 +12,15 @@ const Comment = () => {
     getContent();
   }, []);
   async function getContent() {
-    console.log(slug);
-    var data = await fetch(`http://localhost:3000/api/${slug}`);
+    var data = await fetch(`/api/${slug}`);
     setContent(await data.json());
   }
   return (
-    <div>
-      {console.log(content)}
+    <div className={Styles.layout}>
+      <a className={Styles.back} href="/taxanomy">
+        <ArrowBackIcon /> Back to List
+      </a>
+
       <ReactMarkdown
         children={content.data}
         components={ReactMarkdownComponents(content.data)}

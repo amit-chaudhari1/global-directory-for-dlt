@@ -26,7 +26,7 @@ export default function Home() {
             <h2>Documentation &rarr;</h2>
             <p>Find in-depth information about Next.js features and API.</p>
           </a>
-          s
+
           <a href="/taxanomy" className={styles.card}>
             <h2>Taxanomy &rarr;</h2>
             <p>Learn about Next.js in an interactive course with quizzes!</p>
