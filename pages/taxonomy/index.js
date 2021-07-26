@@ -65,7 +65,7 @@ function taxonomy({ items }) {
 }
 
 export async function getStaticProps() {
-	const files = buildGraph("public/taxonomy");
+	const files = buildGraph("public/Taxonomy");
 
 	return {
 		props: {
