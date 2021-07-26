@@ -49,7 +49,7 @@ export default function Home() {
 						<p>Visually browse the knowledge graph.</p>
 					</a>
 
-					<a href="/Roadmaps" className={styles.card}>
+					<a href="/#" className={styles.card}>
 						<h2>Developer Roadmaps &rarr;</h2>
 						<p>Coming Soon! </p>
 					</a>
