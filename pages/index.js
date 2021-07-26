@@ -31,28 +31,25 @@ export default function Home() {
 				</p>
 
 				<div className={styles.grid}>
-					<a href="https://nextjs.org/docs" className={styles.card}>
+					<a
+						href="https://wiki.hyperledger.org/display/LMDWG"
+						className={styles.card}
+					>
 						<h2>Contribute and Learn &rarr;</h2>
 						<p>Engage with the Community and Discover Resources.</p>
 					</a>
 
-					<a href="/Taxonomy" className={styles.card}>
+					<a href="/taxonomy" className={styles.card}>
 						<h2>Taxonomy &rarr;</h2>
 						<p>Browse the Taxonomy for learning Resources !</p>
 					</a>
 
-					<a
-						href="https://github.com/vercel/next.js/tree/master/examples"
-						className={styles.card}
-					>
+					<a href="/KnowledgeGraph.png" className={styles.card}>
 						<h2>Knowledge Graph &rarr;</h2>
 						<p>Visually browse the knowledge graph.</p>
 					</a>
 
-					<a
-						href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-						className={styles.card}
-					>
+					<a href="/Roadmaps" className={styles.card}>
 						<h2>Developer Roadmaps &rarr;</h2>
 						<p>Coming Soon! </p>
 					</a>
