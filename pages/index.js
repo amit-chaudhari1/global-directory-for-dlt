@@ -44,7 +44,7 @@ export default function Home() {
 						<p>Browse the Taxonomy for learning Resources !</p>
 					</a>
 
-					<a href="/KnowledgeGraph.png" className={styles.card}>
+					<a href="/knowledge-graph" className={styles.card}>
 						<h2>Knowledge Graph &rarr;</h2>
 						<p>Visually browse the knowledge graph.</p>
 					</a>
