@@ -57,8 +57,8 @@ const NeoGraph = (props) => {
 			id={containerId}
 			ref={visRef}
 			style={{
-				width: `${width}px`,
-				height: `${height}px`,
+				width: `${width}vw`,
+				height: `${height}vh`,
 				backgroundColor: `${backgroundColor}`,
 			}}
 		/>

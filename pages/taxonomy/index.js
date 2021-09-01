@@ -1,76 +1,126 @@
-import { buildGraph } from "../../lib/resolvePaths";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import { TreeItem } from "@material-ui/lab";
-import Styles from "../../styles/taxonomy.module.css";
-import Link from "next/link";
+import { useRouter } from "next/router";
+import Styles from "../../styles/markdown.module.css";
+import { useEffect, useState } from "react";
+import neoDriver from "neo4j-driver";
+import {
+	Text,
+	Accordion,
+	AccordionItem,
+	AccordionButton,
+	AccordionPanel,
+	AccordionIcon,
+	Box,
+	Link,
+	Center,
+	Heading,
+	Stack,
+} from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-const getTreeItemsFromData = (treeItems) => {
-	return treeItems.map((treeItemData) => {
-		let children = undefined;
-		if (treeItemData.children && treeItemData.children.length > 0) {
-			children = getTreeItemsFromData(treeItemData.children);
-			return (
-				<TreeItem
-					key={treeItemData.id}
-					nodeId={treeItemData.id}
-					label={treeItemData.name
-						.slice(
-							treeItemData.name.lastIndexOf(`${"\\"}`) + 1,
-							treeItemData.name.length
-						)
-						.toUpperCase()}
-					children={children}
-				/>
-			);
-		} else {
-			return (
-				<Link href={`taxonomy/${treeItemData.name}`}>
-					<TreeItem
-						onClick={() => {}}
-						key={treeItemData.id}
-						nodeId={treeItemData.id}
-						label={treeItemData.name.slice(
-							treeItemData.name.lastIndexOf(`${"\\"}`) + 1,
-							treeItemData.name.length
-						)}
-						children={children}
-					/>
-				</Link>
-			);
-		}
-	});
-};
-const DataTreeView = (treeItems) => {
+function NestedAccordion({ node }) {
+	const haschild = node.relatedto?.length > 0;
 	return (
-		<TreeView
-			defaultCollapseIcon={<ExpandMoreIcon />}
-			defaultExpandIcon={<ChevronRightIcon />}
-		>
-			{getTreeItemsFromData(treeItems.treeItems.children)}
-		</TreeView>
-	);
-};
+		<Accordion defaultIndex={[0]} allowMultiple allowToggle>
+			<AccordionItem w="60vw" minW="300px">
+				<AccordionButton>
+					<Box>
+						<Heading size="md" mb={2}>
+							{node.name}
+						</Heading>
+					</Box>
+					<AccordionIcon />
+				</AccordionButton>
+				<AccordionPanel>
+					<Text>
+						{node.description ? node.description : "No description"}
+					</Text>
 
-function taxonomy({ items }) {
-	return (
-		<div className={Styles.container}>
-			<h1 className={Styles.title}>Taxonomy</h1>
-			<main className={Styles.main}>
-				<DataTreeView treeItems={items} />
-			</main>
-		</div>
+					<Link href={"taxonomy/" + node._id.low} isExternal>
+						More about {node.name}
+						<ExternalLinkIcon mx="2px" />
+					</Link>
+
+					<Stack spacing={4}>
+						{node.relatedto?.map((child) => (
+							<NestedAccordion node={child} />
+						))}
+					</Stack>
+				</AccordionPanel>
+			</AccordionItem>
+		</Accordion>
 	);
 }
 
-export async function getStaticProps() {
-	const files = buildGraph("public/Taxonomy");
+//this page should recieve the id of the taxonomy as astatic prop
+const DesciptionPageComponent = ({ resultInStr }) => {
+	// Below code is for the case where you have more than one Parent node starting out.
+	// let result = new Array();
+	// resultInStr.forEach((child) => {
+	// 	result.push(JSON.parse(child));
+	// });
+	// const [res, setRes] = useState(result);
+	let arr = new Array();
+	// resultInStr.forEach((child) => {
+	arr.push(JSON.parse(resultInStr));
+	// });
+	const [res, setRes] = useState(arr);
+	//TODO: BRUH That's a long ass component. Split it up.
+	return (
+		<Center m="auto">
+			<Stack spacing="24px">
+				{res.map((node) => {
+					return <NestedAccordion node={node} />;
+				})}
+			</Stack>
+		</Center>
+	);
+};
 
+export async function getServerSideProps(context) {
+	let queryResult = new Array();
+
+	const driver = neoDriver.driver(
+		"bolt://localhost:7687",
+		neoDriver.auth.basic("neo4j", "abc")
+	);
+	// TODO: are we using handling the session properly?
+	const session = driver.session({
+		defaultAccessMode: driver.session.READ,
+	});
+
+	// TODO: use environment variables.
+	// TODO: Add error handling for out of bounds id.
+	// TODO: Handle support for nodes who don't have children.
+	const query = await session
+		.run(
+			`
+		MATCH p=(n)-[r]->(m)
+		WITH COLLECT(p) AS ps
+		CALL apoc.convert.toTree(ps) yield value
+		RETURN value;
+		`
+		) // change this query in order to get what you want
+		.then((result) => {
+			// TODO: we can just log the 0th record because we know there is only one
+			// TODO: Investigate on why the below query returns 68 records. (no it is not due to duplicated nodes)
+			// result.records.forEach((record) => {
+			// 	queryResult.push(JSON.stringify(record.toObject().value));
+			// });
+			queryResult.push(
+				JSON.stringify(result.records[0].toObject().value)
+			);
+		})
+		.catch((error) => {
+			console.log(error);
+		})
+		.then(() => session.close());
+
+	// console.log(parentQueryResult);
 	return {
 		props: {
-			items: files,
+			resultInStr: queryResult,
 		},
 	};
 }
-export default taxonomy;
+
+export default DesciptionPageComponent;
