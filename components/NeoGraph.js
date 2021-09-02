@@ -28,7 +28,7 @@ const NeoGraph = (props) => {
 					size: "name",
 					community: "community",
 
-					// title_properties: ["name"],
+					title_properties: ["name", "description"],
 					// sizeCypher: "test",
 					// image: "./test.jpeg",
 				},
@@ -36,7 +36,7 @@ const NeoGraph = (props) => {
 			relationships: {
 				// this object is specific to the KG.
 				relatedTo: {
-					thickness: 12,
+					thickness: "a",
 					caption: true,
 				},
 			},
@@ -46,9 +46,10 @@ const NeoGraph = (props) => {
 			// arrows: true,
 			// heirarchical_sort_method: "directed",
 			// console_debug: true,
-			initial_cypher: "MATCH p=()-[r]->() RETURN p",
+			initial_cypher: "MATCH (p)-[r]->(s) RETURN *",
 		};
 		const vis = new Neovis(config);
+		console.log(vis);
 		vis.render();
 	}, [neo4jUri, neo4jUser, neo4jPassword]);
 
